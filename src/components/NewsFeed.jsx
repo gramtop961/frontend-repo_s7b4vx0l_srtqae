@@ -18,9 +18,24 @@ const impactBadge = (imp) => {
   }
 };
 
-function NewsCard({ item }) {
+function formatMinutesAgo(mins) {
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins}m ago`;
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  if (h < 24) return m ? `${h}h ${m}m ago` : `${h}h ago`;
+  const d = Math.floor(h / 24);
+  return `${d}d ago`;
+}
+
+function NewsCard({ item, density }) {
+  const dense = density === "compact";
   return (
-    <article className="group rounded-xl border border-white/10 bg-slate-900/60 p-4 transition hover:border-white/20">
+    <article
+      className={`${
+        dense ? "p-3" : "p-4"
+      } group rounded-xl border border-white/10 bg-slate-900/60 transition hover:border-white/20`}
+    >
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="mb-2 flex items-center gap-2">
@@ -36,13 +51,13 @@ function NewsCard({ item }) {
               </span>
             )}
           </div>
-          <h3 className="text-sm font-medium text-white">
+          <h3 className={`${dense ? "text-[13px]" : "text-sm"} font-medium text-white`}>
             {item.title}
           </h3>
           <div className="mt-2 flex items-center gap-3 text-xs text-slate-400">
             <span className="truncate">{item.source}</span>
             <span className="flex items-center gap-1">
-              <Clock className="h-3.5 w-3.5" /> {item.time}
+              <Clock className="h-3.5 w-3.5" /> {formatMinutesAgo(item.minutesAgo)}
             </span>
           </div>
         </div>
@@ -62,13 +77,14 @@ function NewsCard({ item }) {
   );
 }
 
-export default function NewsFeed({ items }) {
+export default function NewsFeed({ items, density }) {
   if (!items.length) {
     return (
       <div className="mx-auto max-w-6xl px-4 py-12">
         <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-8 text-center">
           <p className="text-sm text-slate-300">
-            No headlines match your filters. Try selecting more currencies or lowering the impact level.
+            No headlines match your filters. Try selecting more currencies, expanding impact levels,
+            or clearing the search.
           </p>
         </div>
       </div>
@@ -77,9 +93,9 @@ export default function NewsFeed({ items }) {
 
   return (
     <section className="mx-auto max-w-6xl px-4 py-6">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className={`grid grid-cols-1 gap-4 md:grid-cols-2`}>
         {items.map((item) => (
-          <NewsCard key={item.id} item={item} />
+          <NewsCard key={item.id} item={item} density={density} />
         ))}
       </div>
     </section>
