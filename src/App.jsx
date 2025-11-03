@@ -4,6 +4,7 @@ import FiltersBar from "./components/FiltersBar.jsx";
 import ControlsBar from "./components/ControlsBar.jsx";
 import StatsBar from "./components/StatsBar.jsx";
 import NewsFeed from "./components/NewsFeed.jsx";
+import CurrencyCharts from "./components/CurrencyCharts.jsx";
 
 // Mock headlines to demonstrate the experience without any API calls.
 const MOCK_NEWS = [
@@ -140,6 +141,7 @@ export default function App() {
       />
       <ControlsBar sortBy={sortBy} setSortBy={setSortBy} density={density} setDensity={setDensity} />
       <StatsBar items={sorted} />
+      <CurrencyCharts items={sorted} />
       <NewsFeed items={sorted} density={density} />
 
       <footer className="mx-auto max-w-6xl px-4 py-8 text-center text-xs text-slate-400">
